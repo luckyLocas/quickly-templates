@@ -1,7 +1,11 @@
 import * as vscode from 'vscode'
+import * as fs from 'fs'
+import * as path from 'path'
 
-// 定义你的模板内容
-const tablePageTemplate = `  
+// vsce package打包
+
+// 默认的列表页模板内容
+let tablePageTemplate = `  
   import './index.less';
 
   import {
@@ -232,25 +236,30 @@ const tablePageTemplate = `
 
 export function activate(context: vscode.ExtensionContext) {
   // 快速生成列表页模板命令
-  let createTablePage = vscode.commands.registerCommand(
+  const createTablePage = vscode.commands.registerCommand(
     'quickly-templates.createTablePage',
     async (params) => {
-      console.log('params', params)
       try {
         // 获取当前文件夹路径
         const workspace = params.path
         // 定义新文件的路径和名称
         const newFilePath = vscode.Uri.file(workspace + '/index.tsx')
 
+        // 获取用户自定义的模板内容
+        const mySetting: any = vscode.workspace
+          .getConfiguration('myExtension')
+          .get('tableTemplate')
+        console.log('mySetting', mySetting)
+
         // 创建新文件并写入模板内容
         await vscode.workspace.fs.writeFile(
           newFilePath,
-          Buffer.from(tablePageTemplate),
+          Buffer.from(mySetting || tablePageTemplate),
         )
 
         // 显示成功消息
         vscode.window.showInformationMessage('列表页模板创建成功!')
-        // 如果需要，可以打开新创建的文件
+        // 打开新创建的文件
         vscode.window.showTextDocument(newFilePath)
       } catch (error) {
         // 显示错误消息
@@ -259,7 +268,107 @@ export function activate(context: vscode.ExtensionContext) {
     },
   )
   context.subscriptions.push(createTablePage)
+
+  // 创建模块文件夹
+  const disposable = vscode.commands.registerCommand(
+    'quickly-templates.createModuleFolder',
+    async (params) => {
+      try {
+        // 获取用户输入的文件夹名称
+        const folderName = await vscode.window.showInputBox({
+          placeHolder: '请输入文件夹名称',
+        })
+        const folderPath = params.path.substring(1)
+
+        if (folderPath) {
+          const templateFolderPath = path.join(
+            folderPath,
+            folderName || 'template',
+          )
+          fs.mkdirSync(templateFolderPath)
+          // 获取用户自定义的模板内容
+          const mySetting: any = vscode.workspace
+            .getConfiguration('myExtension')
+            .get('tableTemplate')
+
+          const indexContent = Buffer.from(mySetting || tablePageTemplate)
+          fs.writeFileSync(
+            path.join(templateFolderPath, 'index.tsx'),
+            indexContent,
+          )
+
+          const servicesContent = `// Your default services.ts template content`
+          fs.writeFileSync(
+            path.join(templateFolderPath, 'services.ts'),
+            servicesContent,
+          )
+          vscode.window.showInformationMessage('模板创建成功!')
+        }
+      } catch (error) {
+        // 显示错误消息
+        vscode.window.showErrorMessage(`模板创建失败：${error}`)
+      }
+    },
+  )
+  context.subscriptions.push(disposable)
+
+  // 自定义模板内容
+  const editTemplateWebview = vscode.commands.registerCommand(
+    'quickly-templates.editTemplateWebview',
+    function () {
+      let panel = vscode.window.createWebviewPanel(
+        'editTemplateWebview', // Identifies the type of the webview. Used internally
+        '自定义模板内容', // Title of the panel displayed to the user
+        vscode.ViewColumn.One, // Editor column to show the new webview panel in.
+        {
+          // 允许在webview中执行js
+          enableScripts: true,
+        },
+      )
+      panel.webview.html = `
+			<html>
+			<body>
+				<textarea id="myTextarea" rows="50" cols="100" placeholder='请输入新的模板内容'></textarea>
+				<div>
+					<button onclick="saveSetting()">设置为列表页模板</button>
+				</div>
+				<script>
+					function saveSetting() {
+						const value = document.getElementById('myTextarea').value;
+						acquireVsCodeApi().postMessage({
+							command: 'editTableTemplate',
+							text: value
+						});
+					}
+				</script>
+			</body>
+			</html>
+		`
+      panel.webview.onDidReceiveMessage(
+        (message) => {
+          console.log('message', message)
+          switch (message.command) {
+            case 'editTableTemplate':
+              const config = vscode.workspace.getConfiguration('myExtension')
+              config.update(
+                'tableTemplate',
+                message.text,
+                vscode.ConfigurationTarget.Global,
+              )
+              // 显示成功消息
+              vscode.window.showInformationMessage(
+                '模板修改成功，请重新生成模板查看效果!',
+              )
+              return
+          }
+        },
+        undefined,
+        context.subscriptions,
+      )
+    },
+  )
+  context.subscriptions.push(editTemplateWebview)
 }
 
-// This method is called when your extension is deactivated
+// 插件被停用时，会调用此方法
 export function deactivate() {}

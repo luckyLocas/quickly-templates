@@ -6,7 +6,7 @@
   "description": "快速生成模板页面的插件",
   "repository": "https://github.com/luckyLocas/quickly-templates",
   "license": "MIT",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "icon": "logo.png",
   "engines": {
     "vscode": "^1.86.0"
@@ -16,11 +16,35 @@
   ],
   "activationEvents": [],
   "main": "./dist/extension.js",
+  "capabilities": {
+    "virtualWorkspaces": true,
+    "untrustedWorkspaces": {
+      "supported": true
+    }
+  },
   "contributes": {
+    "configuration": {
+      "title": "My Extension",
+      "properties": {
+        "myExtension.mySetting": {
+          "type": "string",
+          "default": "",
+          "description": "My custom setting"
+        }
+      }
+    },
     "commands": [
+      {
+        "command": "quickly-templates.createModuleFolder",
+        "title": "快速生成模块文件夹"
+      },
       {
         "command": "quickly-templates.createTablePage",
         "title": "快速生成列表页"
+      },
+      {
+        "command": "quickly-templates.editTemplateWebview",
+        "title": "自定义模板内容"
       }
     ],
     "menus": {
@@ -33,8 +57,16 @@
       ],
       "quickly-templates.mySubmenu": [
         {
+          "command": "quickly-templates.createModuleFolder",
+          "title": "快速生成模块文件夹"
+        },
+        {
           "command": "quickly-templates.createTablePage",
           "title": "快速生成列表页"
+        },
+        {
+          "command": "quickly-templates.editTemplateWebview",
+          "title": "自定义模板内容"
         }
       ]
     },
