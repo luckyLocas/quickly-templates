@@ -6,7 +6,7 @@
   "description": "快速生成模板页面的插件",
   "repository": "https://github.com/luckyLocas/quickly-templates",
   "license": "MIT",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "icon": "logo.png",
   "engines": {
     "vscode": "^1.86.0"
@@ -26,10 +26,10 @@
     "configuration": {
       "title": "My Extension",
       "properties": {
-        "myExtension.mySetting": {
+        "myExtension.tableTemplate": {
           "type": "string",
           "default": "",
-          "description": "My custom setting"
+          "description": "自定义的列表页模板内容"
         }
       }
     },
