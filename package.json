@@ -1,0 +1,70 @@
+{
+  "name": "quickly-templates",
+  "publisher": "lichuan",
+  "author": "lichuan",
+  "displayName": "Quickly-Templates",
+  "description": "快速生成模板页面的插件",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.86.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "quickly-templates.createTablePage",
+        "title": "快速生成列表页"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "submenu": "quickly-templates.mySubmenu",
+          "when": "explorerResourceIsFolder",
+          "group": "2_main@1"
+        }
+      ],
+      "quickly-templates.mySubmenu": [
+        {
+          "command": "quickly-templates.createTablePage",
+          "title": "快速生成列表页"
+        }
+      ]
+    },
+    "submenus": [
+      {
+        "id": "quickly-templates.mySubmenu",
+        "label": "页面模板快捷生成"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.86.0",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "18.x",
+    "@typescript-eslint/eslint-plugin": "^6.19.1",
+    "@typescript-eslint/parser": "^6.19.1",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3",
+    "ts-loader": "^9.5.1",
+    "webpack": "^5.90.0",
+    "webpack-cli": "^5.1.4",
+    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-electron": "^2.3.9"
+  }
+}
