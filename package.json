@@ -4,7 +4,10 @@
   "author": "lichuan",
   "displayName": "Quickly-Templates",
   "description": "快速生成模板页面的插件",
+  "repository": "https://github.com/luckyLocas/quickly-templates",
+  "license": "MIT",
   "version": "1.0.0",
+  "icon": "logo.png",
   "engines": {
     "vscode": "^1.86.0"
   },
