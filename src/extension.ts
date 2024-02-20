@@ -154,7 +154,7 @@ export function activate(context: vscode.ExtensionContext) {
           config.update(
             message.command,
             message.text,
-            vscode.ConfigurationTarget.Global,
+            vscode.ConfigurationTarget.Workspace,
           )
           // 显示成功消息
           vscode.window.showInformationMessage(
