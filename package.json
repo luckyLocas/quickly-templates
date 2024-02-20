@@ -6,7 +6,7 @@
   "description": "快速生成模板页面的插件",
   "repository": "https://github.com/luckyLocas/quickly-templates",
   "license": "MIT",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "icon": "logo.png",
   "engines": {
     "vscode": "^1.86.0"
