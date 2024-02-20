@@ -6,7 +6,7 @@
   "description": "快速生成模板页面的插件",
   "repository": "https://github.com/luckyLocas/quickly-templates",
   "license": "MIT",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "icon": "logo.png",
   "engines": {
     "vscode": "^1.86.0"
@@ -30,6 +30,11 @@
           "type": "string",
           "default": "",
           "description": "自定义的列表页模板内容"
+        },
+        "myExtension.formTemplate": {
+          "type": "string",
+          "default": "",
+          "description": "自定义的表单页模板内容"
         }
       }
     },
@@ -41,6 +46,10 @@
       {
         "command": "quickly-templates.createTablePage",
         "title": "快速生成列表页"
+      },
+      {
+        "command": "quickly-templates.createFormPage",
+        "title": "快速生成表单页"
       },
       {
         "command": "quickly-templates.editTemplateWebview",
@@ -63,6 +72,10 @@
         {
           "command": "quickly-templates.createTablePage",
           "title": "快速生成列表页"
+        },
+        {
+          "command": "quickly-templates.createFormPage",
+          "title": "快速生成表单页"
         },
         {
           "command": "quickly-templates.editTemplateWebview",
